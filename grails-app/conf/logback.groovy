@@ -1,3 +1,4 @@
+import ch.qos.logback.classic.encoder.PatternLayoutEncoder
 import grails.util.BuildSettings
 import grails.util.Environment
 
@@ -18,7 +19,8 @@ if (Environment.isDevelopmentMode() && targetDir != null) {
         }
     }
     logger("StackTrace", ERROR, ['FULL_STACKTRACE'], false)
-    root(ERROR, ['STDOUT', 'FULL_STACKTRACE'])
+    logger('madeline2', INFO, ['STDOUT'])
+    root(ERROR, ['FULL_STACKTRACE'])
 }
 else {
     root(ERROR, ['STDOUT'])
