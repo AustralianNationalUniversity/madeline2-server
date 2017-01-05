@@ -6,6 +6,15 @@ grails:
     spring:
         transactionManagement:
             proxies: false
+
+environments:
+    development:
+        grails:
+            serverURL: http://localhost:8080
+    production:
+        grails:
+            serverURL: http://130.56.244.179
+
 info:
     app:
         name: '@info.app.name@'
