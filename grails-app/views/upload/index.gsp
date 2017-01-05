@@ -54,7 +54,7 @@
                 <p>Example using the cURL command for linux operating systems:</p>
 
                 <p style="border: solid 1px gray; padding: 10px;">
-                    curl -X POST -H 'Content-Type:text/plain' --data-binary @pedigreeFile.ped ${grailsApplication.config.grails.serverURL}/webservice/genogram
+                    curl -X POST -H 'Content-Type:text/plain' --data-binary @pedigreeFile.ped ${grailsApplication.config.grails.serverURL}/${grailsApplication.config.server.contextPath}/webservice/genogram
                 </p>
             </div>
         </div>

@@ -9,7 +9,7 @@ class UrlMappings {
             }
         }
 
-        "/"(redirect: '/upload')
+        "/"(controller: 'upload')
         "500"(view:'/error')
         "404"(view:'/notFound')
     }
