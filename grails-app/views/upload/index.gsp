@@ -37,6 +37,9 @@
                     <a href="http://madeline.med.umich.edu/madeline/documentation.php" target="_blank">Pedigree file formats</a>
                 </div>
                 <div>
+                    Sample file: <a href="http://madeline.med.umich.edu/madeline/testdata/input/si_002.data">si_002.data</a>
+                </div>
+                <div>
                     <g:uploadForm action="generate">
                         <input type="file" name="pedigreeFile" />
                         <br/>

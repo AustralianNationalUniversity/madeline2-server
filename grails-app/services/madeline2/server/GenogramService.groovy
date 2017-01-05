@@ -38,7 +38,7 @@ class GenogramService {
         //File genogramFile = File.createTempFile(filename+"_genogram", ".svg")
         //String genogramFilenamePrefix = filename + "_genogram"
         // Write the genogram in the response as a downloadable image file
-        String madeline2Command = "madeline2 --outputprefix "+pedigreeFile.name +" "+pedigreeFile.absolutePath
+        String madeline2Command = "madeline2 --color --outputprefix "+pedigreeFile.name +" "+pedigreeFile.absolutePath
 
         //File workingDir = new File("/tmp")
         File workingDir = new File(System.getProperty('java.io.tmpdir'))
