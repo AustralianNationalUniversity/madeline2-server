@@ -23,7 +23,7 @@
 
         <div class="svg" role="presentation">
             <div class="grails-logo-container">
-                <asset:image src="genogram.svg" width="40%" style="padding: 15px;"/>
+                <asset:image src="genogram.png" width="40%" style="padding: 15px;"/>
             </div>
         </div>
 

@@ -7,10 +7,11 @@ import org.apache.log4j.Logger
  * Service for generating genograms
  * @author Philip Wu
  */
-@Transactional
 class GenogramService {
 
     Logger logger = Logger.getLogger(GenogramService.class)
+    def grailsApplication
+
 
     public File generatePedigreeFile(def request) {
 
@@ -39,7 +40,9 @@ class GenogramService {
         // Write the genogram in the response as a downloadable image file
         String madeline2Command = "madeline2 --outputprefix "+pedigreeFile.name +" "+pedigreeFile.absolutePath
 
-        File workingDir = new File("/tmp")
+        //File workingDir = new File("/tmp")
+        File workingDir = new File(System.getProperty('java.io.tmpdir'))
+        logger.info("workingDir="+workingDir)
         String resp = CliExec.execCommand(madeline2Command, workingDir, null, true, true)
         logger.info("resp="+resp)
 
