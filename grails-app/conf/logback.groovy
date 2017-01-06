@@ -23,5 +23,6 @@ if (Environment.isDevelopmentMode() && targetDir != null) {
     root(ERROR, ['FULL_STACKTRACE'])
 }
 else {
+    logger('madeline2', INFO, ['STDOUT'])
     root(ERROR, ['STDOUT'])
 }

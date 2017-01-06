@@ -33,7 +33,7 @@
             <h2>Upload Pedigree</h2>
             <div style="margin-left: 30px;">
                 <div>
-                    Accepted file formats (scroll down to section 'Pedigree file formats'):
+                    Accepted file formats (scroll down to section 'Pedigree file formats'). It is highly recommended to use the <b>tab delimited format</b>:
                     <a href="http://madeline.med.umich.edu/madeline/documentation.php" target="_blank">Pedigree file formats</a>
                 </div>
                 <div>

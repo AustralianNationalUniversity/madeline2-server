@@ -34,22 +34,82 @@ class GenogramService {
      * @return
      */
     public File generateGenogram(File pedigreeFile) {
-        // Execulte command line to generate genogram
-        //File genogramFile = File.createTempFile(filename+"_genogram", ".svg")
-        //String genogramFilenamePrefix = filename + "_genogram"
-        // Write the genogram in the response as a downloadable image file
-        String madeline2Command = "madeline2 --color --outputprefix "+pedigreeFile.name +" "+pedigreeFile.absolutePath
+        logger.info("file contents:\n"+pedigreeFile.text)
 
-        //File workingDir = new File("/tmp")
+        // clean the file
+        pedigreeFile = cleanPedigreeFile(pedigreeFile)
+
+        // Execulte command line to generate genogram
+        String madeline2Command = "madeline2 --color --outputprefix "+pedigreeFile.name +" "+pedigreeFile.absolutePath
         File workingDir = new File(System.getProperty('java.io.tmpdir'))
-        logger.info("workingDir="+workingDir)
-        String resp = CliExec.execCommand(madeline2Command, workingDir, null, true, true)
+        def (resp, err) = CliExec.execCommand(madeline2Command, workingDir, null, true, true)
         logger.info("resp="+resp)
+        logger.info("err="+err)
 
         // Write the image to the response
         String genogramFilename = pedigreeFile.name + '.svg'
         File genogramFile = new File(workingDir.absolutePath+"/"+genogramFilename)
 
+        // Error handling in case madeline2 fails to generate the genogram, most likely due to badly formatted input
+        if (! genogramFile.exists()) {
+            throw new Exception(err)
+        }
+
         return genogramFile
+    }
+
+    /**
+     * Madeline2 requires that the number of bytes in each row of the data block be the same for all rows.
+     * We may need to pad some rows with extra spaces.
+     * @param pedigreeFile
+     * @return
+     */
+    public File cleanPedigreeFile(File pedigreeFile) {
+        boolean inDataBlock = false
+
+        // First calculate the maximum number of bytes for each row
+        int maxRowBytes = 0
+        int index = 0
+        pedigreeFile.eachLine { line ->
+            // Look for data block
+            if (! inDataBlock) {
+                if (index > 0 && line.trim() == '') {
+                    inDataBlock = true
+                }
+            } else {
+                maxRowBytes = Math.max(line.bytes.length, maxRowBytes)
+            }
+            index++
+        }
+
+        logger.info("maxRowBytes="+maxRowBytes)
+
+        // Now pad the rows
+        StringBuilder sb = new StringBuilder()
+        inDataBlock = false
+        List lines = []
+        pedigreeFile.eachLine { line ->
+            // Look for data block
+            if (! inDataBlock) {
+                if (index > 0 && line.trim() == '') {
+                    inDataBlock = true
+                }
+            } else {
+                // in data block
+                line = line.padRight(maxRowBytes)
+            }
+
+            lines << line
+        }
+
+        // Combine all the lines back into a string separated by newline character
+        String strFile = lines.join('\n')
+
+        // Overwrite the original file
+        pedigreeFile.newWriter().withWriter { w ->
+            w << strFile
+        }
+
+        return pedigreeFile
     }
 }

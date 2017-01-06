@@ -25,8 +25,13 @@ class UploadController {
         File pedigreeFile = genogramService.generatePedigreeFile(request)
         multipartFile.transferTo(pedigreeFile)
 
-        File genogramFile = genogramService.generateGenogram(pedigreeFile)
+        try {
+            File genogramFile = genogramService.generateGenogram(pedigreeFile)
 
-        render(file: genogramFile, filename: genogramFile.name, contentType:'image/svg+xml')
+            render(file: genogramFile, filename: genogramFile.name, contentType:'image/svg+xml')
+            return
+        } catch (Exception e) {
+            render e.message
+        }
     }
 }

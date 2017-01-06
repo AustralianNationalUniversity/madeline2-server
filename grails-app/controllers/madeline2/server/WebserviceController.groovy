@@ -22,9 +22,13 @@ class WebserviceController {
         File pedigreeFile = genogramService.generatePedigreeFile(request)
         pedigreeFile << pedigree
 
-
-        File genogramFile = genogramService.generateGenogram(pedigreeFile)
-
-        render(file: genogramFile, filename: genogramFile.name, contentType:'image/svg+xml')
+        try {
+            File genogramFile = genogramService.generateGenogram(pedigreeFile)
+            render(file: genogramFile, filename: genogramFile.name, contentType: 'image/svg+xml')
+            return
+        } catch (Exception e) {
+            render e.message
+            return
+        }
     }
 }

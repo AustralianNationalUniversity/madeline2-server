@@ -15,7 +15,7 @@ class CliExec {
      * @param command List of command arguments or command represented as a String
      * @return
      */
-    public static String execCommand(Object command, File workingDir = null, OutputStream os=null, Boolean doLog = true, Boolean ignoreStdErr = false) {
+    def static execCommand(Object command, File workingDir = null, OutputStream os=null, Boolean doLog = true, Boolean ignoreStdErr = false) {
         boolean doReturn = false
         if (os == null) {
             os =  new ByteArrayOutputStream()
@@ -38,9 +38,9 @@ class CliExec {
         }
 
         if (doReturn)
-            return new String(os.toString())
+            return [os.toString(), serr.toString()]
         else
-            return null
+            return [null, null]
     }
 
 
