@@ -40,7 +40,7 @@ class GenogramService {
         pedigreeFile = cleanPedigreeFile(pedigreeFile)
 
         // Execulte command line to generate genogram
-        String madeline2Command = "madeline2 --nolabeltruncation --color --outputprefix "+pedigreeFile.name +" "+pedigreeFile.absolutePath
+        String madeline2Command = "madeline2 --font-size 9 --nolabeltruncation --color --outputprefix "+pedigreeFile.name +" "+pedigreeFile.absolutePath
         File workingDir = new File(System.getProperty('java.io.tmpdir'))
         def (resp, err) = CliExec.execCommand(madeline2Command, workingDir, null, true, true)
         logger.info("resp="+resp)
