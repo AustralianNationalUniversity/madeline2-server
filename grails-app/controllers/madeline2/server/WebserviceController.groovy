@@ -22,8 +22,12 @@ class WebserviceController {
         File pedigreeFile = genogramService.generatePedigreeFile(request)
         pedigreeFile << pedigree
 
+        // Labels
+        List<String> labels = params.list('label')
+        logger.info('labels='+labels)
+
         try {
-            File genogramFile = genogramService.generateGenogram(pedigreeFile)
+            File genogramFile = genogramService.generateGenogram(pedigreeFile, labels)
             render(file: genogramFile, filename: genogramFile.name, contentType: 'image/svg+xml')
             return
         } catch (Exception e) {

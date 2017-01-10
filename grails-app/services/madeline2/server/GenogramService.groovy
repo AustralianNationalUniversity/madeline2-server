@@ -33,16 +33,41 @@ class GenogramService {
      * @param pedigreeFile
      * @return
      */
-    public File generateGenogram(File pedigreeFile) {
+    public File generateGenogram(File pedigreeFile, List<String> labels = null) {
         logger.info("file contents:\n"+pedigreeFile.text)
 
         // clean the file
         pedigreeFile = cleanPedigreeFile(pedigreeFile)
 
+        // Combine the labels as a command line argument
+        String cmdLabels = ""
+        if (labels) {
+            cmdLabels = labels.join(" ")
+        }
+
         // Execulte command line to generate genogram
-        String madeline2Command = "madeline2 --font-size 9 --nolabeltruncation --color --outputprefix "+pedigreeFile.name +" "+pedigreeFile.absolutePath
+//        String madeline2Command = "madeline2"
+//        if (cmdLabels) {
+//            madeline2Command += ' --Labels \''+cmdLabels+'\''
+//        }
+//        madeline2Command += " --font-size 9 --nolabeltruncation --color --outputprefix "+pedigreeFile.name +" "+pedigreeFile.absolutePath
+
+        List<String> cmdList = ['madeline2']
+        if (cmdLabels) {
+            cmdList << '--Labels'
+            cmdList << cmdLabels
+        }
+        cmdList << "--font-size"
+        cmdList << "9"
+        cmdList << "--nolabeltruncation"
+        cmdList << "--color"
+        cmdList << "--outputprefix"
+        cmdList << pedigreeFile.name
+        cmdList << pedigreeFile.absolutePath
+
+
         File workingDir = new File(System.getProperty('java.io.tmpdir'))
-        def (resp, err) = CliExec.execCommand(madeline2Command, workingDir, null, true, true)
+        def (resp, err) = CliExec.execCommand(cmdList, workingDir, null, true, true)
         logger.info("resp="+resp)
         logger.info("err="+err)
 
