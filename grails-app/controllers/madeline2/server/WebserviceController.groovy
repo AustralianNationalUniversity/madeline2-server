@@ -16,7 +16,7 @@ class WebserviceController {
 
     def genogram() {
 
-        def pedigree = request.getReader().text
+        String pedigree = request.getReader().text
 
         // Save the file to disk to temporary folder
         File pedigreeFile = genogramService.generatePedigreeFile(request)

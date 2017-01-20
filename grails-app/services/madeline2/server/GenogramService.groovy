@@ -61,6 +61,7 @@ class GenogramService {
         cmdList << "9"
         cmdList << "--nolabeltruncation"
         cmdList << "--color"
+        cmdList << "--scalable"
         cmdList << "--outputprefix"
         cmdList << pedigreeFile.name
         cmdList << pedigreeFile.absolutePath
@@ -102,7 +103,7 @@ class GenogramService {
                     inDataBlock = true
                 }
             } else {
-                maxRowBytes = Math.max(line.bytes.length, maxRowBytes)
+                maxRowBytes = Math.max(line.encodeAsHTML().bytes.length, maxRowBytes)
             }
             index++
         }
@@ -121,7 +122,7 @@ class GenogramService {
                 }
             } else {
                 // in data block
-                line = line.padRight(maxRowBytes)
+                line = line.encodeAsHTML().padRight(maxRowBytes)
             }
 
             lines << line
