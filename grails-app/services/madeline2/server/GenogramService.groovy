@@ -1,6 +1,6 @@
 package madeline2.server
 
-import grails.transaction.Transactional
+import org.apache.commons.lang.StringEscapeUtils
 import org.apache.log4j.Logger
 
 /**
@@ -61,7 +61,7 @@ class GenogramService {
         cmdList << "9"
         cmdList << "--nolabeltruncation"
         cmdList << "--color"
-        cmdList << "--scalable"
+        //cmdList << "--scalable"
         cmdList << "--outputprefix"
         cmdList << pedigreeFile.name
         cmdList << pedigreeFile.absolutePath
@@ -93,17 +93,21 @@ class GenogramService {
     public File cleanPedigreeFile(File pedigreeFile) {
         boolean inDataBlock = false
 
+        // Encode to HTML for SVG display
+        String fileContent = pedigreeFile.text
+        fileContent = fileContent.encodeAsHTML()
+
         // First calculate the maximum number of bytes for each row
         int maxRowBytes = 0
         int index = 0
-        pedigreeFile.eachLine { line ->
+        fileContent.eachLine { line ->
             // Look for data block
             if (! inDataBlock) {
                 if (index > 0 && line.trim() == '') {
                     inDataBlock = true
                 }
             } else {
-                maxRowBytes = Math.max(line.encodeAsHTML().bytes.length, maxRowBytes)
+                maxRowBytes = Math.max(line.bytes.length, maxRowBytes)
             }
             index++
         }
@@ -111,10 +115,9 @@ class GenogramService {
         logger.info("maxRowBytes="+maxRowBytes)
 
         // Now pad the rows
-        StringBuilder sb = new StringBuilder()
         inDataBlock = false
         List lines = []
-        pedigreeFile.eachLine { line ->
+        fileContent.eachLine { line ->
             // Look for data block
             if (! inDataBlock) {
                 if (index > 0 && line.trim() == '') {
@@ -122,7 +125,8 @@ class GenogramService {
                 }
             } else {
                 // in data block
-                line = line.encodeAsHTML().padRight(maxRowBytes)
+                //line = line.encodeAsHTML().padRight(maxRowBytes)
+                line = line.padRight(maxRowBytes)
             }
 
             lines << line
@@ -130,6 +134,8 @@ class GenogramService {
 
         // Combine all the lines back into a string separated by newline character
         String strFile = lines.join('\n')
+        logger.info("strFile="+strFile)
+
 
         // Overwrite the original file
         pedigreeFile.newWriter().withWriter { w ->
