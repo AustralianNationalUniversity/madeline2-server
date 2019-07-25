@@ -1,7 +1,7 @@
 package madeline2.server
 
-import org.apache.log4j.Logger
 import org.springframework.web.multipart.MultipartFile
+import org.apache.log4j.Logger
 
 /**
  * Controller for generating genograms by uploading a pedigree file

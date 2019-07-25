@@ -22,6 +22,8 @@ class GenogramService {
         }
         // Guarantee uniqueness across multiple concurrent requests
         filename += "_"+System.currentTimeMillis()+"_"+Thread.currentThread().id
+        filename = filename.replaceAll(':', '')
+        logger.info('filename: '+filename)
         File pedigreeFile = File.createTempFile(filename,".madeline2")
 
         return pedigreeFile
@@ -36,8 +38,12 @@ class GenogramService {
     public File generateGenogram(File pedigreeFile, List<String> labels = null) {
         logger.info("file contents:\n"+pedigreeFile.text)
 
+        // Truncate labels that are too long to display in genogram
+        pedigreeFile = truncateLabelsPedigreeFile(pedigreeFile)
+
         // clean the file
         pedigreeFile = cleanPedigreeFile(pedigreeFile)
+
 
         // Combine the labels as a command line argument
         String cmdLabels = ""
@@ -112,7 +118,7 @@ class GenogramService {
             index++
         }
 
-        logger.info("maxRowBytes="+maxRowBytes)
+        //logger.info("maxRowBytes="+maxRowBytes)
 
         // Now pad the rows
         inDataBlock = false
@@ -134,7 +140,7 @@ class GenogramService {
 
         // Combine all the lines back into a string separated by newline character
         String strFile = lines.join('\n')
-        logger.info("strFile="+strFile)
+        //logger.info("cleanPedigreeFile strFile="+strFile)
 
 
         // Overwrite the original file
@@ -144,4 +150,54 @@ class GenogramService {
 
         return pedigreeFile
     }
+
+    /**
+     * Example pedigree file contents
+     *
+     * FamilyID        IndividualID    Gender  Father  Mother  Affected        Proband GivenID Sampled Affected_Variant
+     * 96494   93419   F       93420   93421   A       Y       [LABEL147, LABEL372]       Y       .
+     * 96494   93420   M       .       .       U       .       [LABEL148, LABEL373]       Y       .
+     * 96494   93421   F       .       .       U       .       [LABEL374, LABEL149]       Y       .
+     *
+     * @param pedigreeFile
+     * @return
+     */
+    public File truncateLabelsPedigreeFile(File pedigreeFile) {
+
+        // Encode to HTML for SVG display
+        String fileContent = pedigreeFile.text
+        fileContent = fileContent.encodeAsHTML()
+
+        List lines = []
+        int index = 0
+        fileContent.eachLine { line ->
+            String[] columns = line.split('\t')
+            if (columns.length >= 8) {
+                String label = columns[7]
+                label = label.replaceAll('\\[', '').replaceAll('\\]', '')
+                if (label.length() > 16) {
+                    // truncate
+                    label = label.substring(0, 16) + '..'
+                }
+
+                // Replace the previous label
+                columns[7] = label
+            }
+            String newLine = columns.join('\t')
+            lines << newLine
+        }
+
+        // Combine all the lines back into a string separated by newline character
+        String strFile = lines.join('\n')
+
+
+        // Overwrite the original file
+        pedigreeFile.newWriter().withWriter { w ->
+            w << strFile
+        }
+
+        return pedigreeFile
+    }
+
+
 }
