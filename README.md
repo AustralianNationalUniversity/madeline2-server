@@ -1,6 +1,6 @@
 # madeline2-server
 A front-end web server to the madeline2 command-line application. 
-[Ubuntu full installation guide available here](INSTALLAION_UBUNTU.MD)
+[Ubuntu full installation guide available here](INSTALLATION_UBUNTU.MD)
 
 To set up the Madeline2 server from the GitHub repository, you'll need to follow these steps:
 
