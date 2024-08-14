@@ -55,7 +55,7 @@ This will generate a WAR file in the build/libs directory.
 http://130.56.244.179/madeline2-server
 
 
-## 9. Monitoring and Logs
+## Monitoring and Logs
 
 * Check the Tomcat logs for any issues. Logs are typically located in the logs directory of the Tomcat installati
 
